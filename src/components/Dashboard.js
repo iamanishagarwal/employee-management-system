@@ -24,13 +24,14 @@ export default class Dashboard extends Component {
 
   handleDeleteBtn = index => {
     let results = JSON.parse(JSON.stringify(this.state.employees))
-    delete results[index]
+    results.splice(index, 1)
+    console.log(results)
     localStorage.setItem('employees', JSON.stringify(results))
     this.setState({ employees: results })
   }
 
   renderEmployees = () => {
-    let results = this.state.employees
+    let results = JSON.parse(localStorage.getItem('employees')) || []
     console.log(results)
     if (results.length === 0) return null
     else {
