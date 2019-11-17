@@ -4,8 +4,6 @@ export default class AddEmplyeeModal extends Component {
   state = { employee: {}, modal: 'add', index: null }
 
   static getDerivedStateFromProps = (props, state) => {
-    console.log(props)
-    console.log(state)
     if (props.modal === 'edit') {
       return {
         employee: props.employee,
@@ -32,7 +30,7 @@ export default class AddEmplyeeModal extends Component {
       employees[this.state.index] = this.state.employee
     }
     localStorage.setItem('employees', JSON.stringify(employees))
-    employees = JSON.parse(localStorage.getItem('employees'))
+    console.log(employees)
     this.props.submit(employees)
     this.closeBtn.click()
   }
