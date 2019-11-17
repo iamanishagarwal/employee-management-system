@@ -2,16 +2,28 @@ import React, { Component } from 'react'
 
 export default class Dashboard extends Component {
   state = {
-    employees: []
+    employees: [],
+    availableEmp: 0
+  }
+
+  calculateAvailableEmp = employees => {
+    let count = 0
+    employees.forEach(emp => {
+      if (emp.available === true) count++
+    })
+    return count
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (
-      JSON.stringify(props.employees) !== JSON.stringify(state.employees) &&
-      props.employees.length >= state.employees.length
-    ) {
+    if (JSON.stringify(props.employees) !== JSON.stringify(state.employees) && props.employees.length > 0) {
+      let count = 0
+      props.employees.forEach(emp => {
+        if (emp.available === true) count++
+      })
+
       return {
-        employees: props.employees
+        employees: props.employees,
+        availableEmp: count
       }
     }
     return null
@@ -19,7 +31,21 @@ export default class Dashboard extends Component {
 
   componentDidMount = () => {
     let employees = JSON.parse(localStorage.getItem('employees')) || []
-    this.setState({ employees })
+    let availableEmp = this.calculateAvailableEmp(employees)
+    this.setState({ employees, availableEmp })
+  }
+
+  handleCheckBox = i => {
+    console.log(i)
+    let results = this.state.employees
+    let emp = results[i]
+    let emp1 = JSON.parse(JSON.stringify(emp))
+    emp1.available = !emp.available
+    results[i] = emp1
+    localStorage.setItem('employees', JSON.stringify(results))
+    let availableEmp = this.calculateAvailableEmp(results)
+    this.setState({ employees: results, availableEmp })
+    console.log(availableEmp)
   }
 
   handleDeleteBtn = index => {
@@ -42,7 +68,13 @@ export default class Dashboard extends Component {
             <td>{emp.department}</td>
             <td>
               <div className="custom-control custom-checkbox">
-                <input type="checkbox" className="custom-control-input" id={i} checked={emp.available} />
+                <input
+                  type="checkbox"
+                  className="custom-control-input"
+                  id={i}
+                  checked={emp.available}
+                  onChange={emp => this.handleCheckBox(i)}
+                />
                 <label className="custom-control-label" htmlFor={i}></label>
               </div>
             </td>
@@ -87,10 +119,10 @@ export default class Dashboard extends Component {
                 <div className="card mt-4 mb-3 mb-md-4">
                   <div className="card-body p-3">
                     <h5 className="text-secondary mb-2">
-                      Available: <span className="font-weight-bold ml-1 text-dark">08</span>
+                      Available: <span className="font-weight-bold ml-1 text-dark">{this.state.availableEmp}</span>
                     </h5>
                     <h5 className="text-secondary">
-                      Total: <span className="font-weight-bold ml-1 text-dark">50</span>
+                      Total: <span className="font-weight-bold ml-1 text-dark">{this.state.employees.length}</span>
                     </h5>
                     ​
                     <button
