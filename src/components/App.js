@@ -4,19 +4,24 @@ import Dashboard from './Dashboard'
 import AddEmployeeModal from './AddEmplyeeModal'
 
 export default class App extends Component {
-  state = {
-    employees: [],
-    editEmployee: {
-      name: '',
-      gender: '',
-      age: '',
-      designation: '',
-      department: '',
-      joiningDate: '',
-      available: true
-    },
-    modal: 'add',
-    editEmployeeIndex: null
+  constructor(props) {
+    super(props)
+
+    let employees = JSON.parse(localStorage.getItem('employees')) || []
+    this.state = {
+      employees: employees,
+      editEmployee: {
+        name: '',
+        gender: '',
+        age: '',
+        designation: '',
+        department: '',
+        joiningDate: '',
+        available: true
+      },
+      modal: 'add',
+      editEmployeeIndex: null
+    }
   }
 
   addModalSubmit = employees => {
