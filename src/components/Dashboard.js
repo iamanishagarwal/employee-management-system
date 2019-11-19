@@ -53,7 +53,9 @@ export default class Dashboard extends Component {
     results.splice(index, 1)
     console.log(results)
     localStorage.setItem('employees', JSON.stringify(results))
-    this.setState({ employees: results })
+    let availableEmp = this.calculateAvailableEmp(results)
+    console.log(availableEmp)
+    this.setState({ employees: results, availableEmp })
   }
 
   renderEmployees = () => {
@@ -73,7 +75,7 @@ export default class Dashboard extends Component {
                   className="custom-control-input"
                   id={i}
                   checked={emp.available}
-                  onChange={emp => this.handleCheckBox(i)}
+                  onChange={() => this.handleCheckBox(i)}
                 />
                 <label className="custom-control-label" htmlFor={i}></label>
               </div>
@@ -91,14 +93,7 @@ export default class Dashboard extends Component {
               >
                 <i className="fa fa-edit"></i>&nbsp; Edit
               </button>
-              <button
-                type="button"
-                className="btn btn-outline-danger btn-sm"
-                onClick={() => {
-                  console.log(i)
-                  this.handleDeleteBtn(i)
-                }}
-              >
+              <button type="button" className="btn btn-outline-danger btn-sm" onClick={() => this.handleDeleteBtn(i)}>
                 <i className="fa fa-trash"></i>&nbsp; Delete
               </button>
             </td>
@@ -110,6 +105,7 @@ export default class Dashboard extends Component {
   }
 
   render = () => {
+    console.log(this.state)
     return (
       <div>
         <div className="container-fluid">
